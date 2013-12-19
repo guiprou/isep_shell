@@ -22,6 +22,12 @@ cat <<"BANNER"
 
 BANNER
 
+
+function aide {
+	echo -e "Ce script permet de récupérer les dernières actualités footballistiques sur le site de lequipe.fr \nUne recherche par mot clés sera bientôt possible"
+}
+
+function dl {
 echo -n "Téléchargement de la page http://www.lequipe.fr/news.html... "
 
 # On télécharge le code source qu'on enregistre dans un fichier page, sans afficher les opérations.
@@ -44,7 +50,7 @@ grep -o ".*\/Actualites\/.*" page |grep -o -E 'href="([^"#]+)"' |cut -d'"' -f2 |
 # On compte le nombre de liens présent dans "liste_cleans"
 # Cela donne l'intervalle dans lequel générer le nombre aléatoire
 max=$(wc -l < liste_cleans)
-number=$[($RANDOM % ($[$max - 0] + 1))]
+number=$[($RANDOM % ($max + 1))]
 
 # Head -X affiche les X premières lignes du fichier, tail -1 affiche la dernière
 # Solution réservée aux fichiers de petites tailles
@@ -70,3 +76,20 @@ echo
 
 # On affiche le contenu du fichier "contenu"
 cat -n contenu 2> /dev/null
+}
+
+OPTS=$( getopt -o h -l help -- $@ )
+
+if [ $? != 0 ]
+then
+    exit 1
+fi
+ 
+eval set -- "$OPTS"
+
+echo $OPT
+
+case "$1" in
+-h) aide ;;
+--help) aide ;;
+esac
