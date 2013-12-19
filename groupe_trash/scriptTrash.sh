@@ -1,13 +1,21 @@
 #!bin/bash
-trashPath="~/.local/share/Trash/"
 
+cd ~/.local/share/
 
-cd ~/.local/share/Trash/
+if [ -d "Trash/" ]; then
+	
+	echo Directory Trash exists
+	cd Trash/files/
 
-if [ -L $trashPath ]; then
-    echo "$trashPath exists"
-else
-    echo "$trashPath doesn t exist"
+	sizeMin=4
+	sizeFiles=$(du -h | grep . | sort -n | tail -n 1 | cut -d K -f 1)
+	
+	
+	if [ $sizeFiles = $sizeMin ]; then
+		echo  Trash is empty
+	else
+		echo Trash contains some files
+	fi
 fi
 
 exit
