@@ -10,31 +10,32 @@ mkdir /equipe_sh && cd /equipe_sh
 cat <<"BANNER"                                                                                                              
          _\|/_
          (o o)
- +----oOO-{_}-OOo----------------------------+
+ +----oOO-{_}-OOo------------------------------+
   _                   _                 __      
  | | ___  __ _  _  _ (_) _ __  ___     / _| _ _ 
  | |/ -_)/ _` || || || || '_ \/ -_) _ |  _|| '_|
  |_|\___|\__, | \_,_||_|| .__/\___|(_)|_|  |_|  
             |_|         |_|                     
- |                                           |
- |                           By: Hugo & Alex |
- +-------------------------------------------+
+ |                                             |
+ |                           By: Hugo & Alex   |
+ +---------------------------------------------+
 
 BANNER
 
 
 function aide {
-	echo -e "Ce script permet de récupérer les dernières actualités footballistiques sur le site de lequipe.fr \nUne recherche par mot clés sera bientôt possible"
+	echo -e "Ce script permet de récupérer les dernières actualités footballistiques sur le site de lequipe.fr \nUne recherche par mots clefs sera bientôt possible \n"
+        echo -e "Utilisation : ./script.sh [-OPTS] [MOTS CLEFS] \n"
 }
 
-function dl {
+function affiche {
 echo -n "Téléchargement de la page http://www.lequipe.fr/news.html... "
 
 # On télécharge le code source qu'on enregistre dans un fichier page, sans afficher les opérations.
 wget --quiet --output-document page http://www.lequipe.fr/news.html
 
 # Substitution permettant de compter le nombre de lignes du fichier page
-nbligne=$(cat /equipe_sh/page |wc -l)
+nbligne=$(cat /equipe_sh/page 2> /dev/null |wc -l)
 
 # On vérifie que le fichier contient quelque chose (que la page a été correctement téléchargée)
 if [[ $nbligne != 0 ]]
@@ -61,7 +62,7 @@ echo -n "Téléchargement de la page $lien... "
 wget --quiet --output-document article $lien
 
 # Comme vu plus haut, on vérifie que la page a bien été téléchargée en comptant le nombre de lignes présentes.
-nbligne=$(cat /equipe_sh/article |wc -l)
+nbligne=$(cat /equipe_sh/article 2> /dev/null |wc -l) 
 
 if [[ $nbligne != 0 ]]
 	then sleep 1 ; echo "Terminé"
@@ -78,18 +79,19 @@ echo
 cat -n contenu 2> /dev/null
 }
 
-OPTS=$( getopt -o h -l help -- $@ )
-
-if [ $? != 0 ]
-then
-    exit 1
+if [[ $# != 0 ]] ; then 
+        if [[( $1 == '-h' || $1 == '--help' ) && $# == 1 ]] ; then
+                aide
+        elif [[ $# > 1 ]] ; then 
+                shift
+                for i
+                do
+                        mots=$mots" "$i
+                done
+        else echo -e "Option ou argument non reconnu\n"
+        fi
+else affiche
 fi
- 
-eval set -- "$OPTS"
 
-echo $OPT
 
-case "$1" in
--h) aide ;;
---help) aide ;;
-esac
+
