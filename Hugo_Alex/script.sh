@@ -48,7 +48,7 @@ fi
 
 # On ne prend que les liens liés aux actualités, on ne garde que ce qu'il y'a à l'intérieur de "href", on élimine les doublons, et on garde les actus foot.
 # On redirige la sortie standard pour enregistrer les résultats dans "liste_cleans"
-grep -o ".*\/Actualites\/.*" page |grep -o -E 'href="([^"#]+)"' |cut -d'"' -f2 |uniq |grep "Football\/" > liste_cleans
+grep -o ".*\/Actualites\/.*" page |grep -o -E 'href="([^"#]+)"' |cut -d'"' -f2 |grep ".*\/Football\/.*" |uniq > liste_cleans
 
 
 
@@ -99,6 +99,11 @@ echo
 
 # On affiche le contenu du fichier "contenu"
 cat -n contenu 2> /dev/null
+graphique=$(cat contenu 2> /dev/null)
+# Si le paquet Zenity est installé sur la machine, alors on affiche le contenu dans une fenêtre graphique
+if [[ $(which zenity) != "" ]] ; then zenity --notification --title="Contenu de l'article" --text="$graphique" 
+else echo -e "\nZenity est requis pour l'affichage graphique, pour l'installer, saisir : # sudo apt-get install zenity \n"
+fi
 }
 
 # On regarde si un argument a été passé en paramètre du script
