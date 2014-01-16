@@ -39,9 +39,10 @@ fi
 if [ $trash = $trashPleine ]; then
   if [ $1 ] && [ $2 ] && [  $3 ]; then
  	 	case $1 in
- 	 		pl) var=$(find . -size + $2$3 -exec rm -i);;
- 	 		mi) varis=$(find . -size - $2$3 -exec rm -i);;
+ 	 		pl) find . -size + $2$3 -exec rm {} + 1>> ~/log;;
+ 	 		mi) find . -size - $2$3 -exec rm {} + 1>> ~/log;;
     esac
+    echo Finish
   else
  	 	echo No Parameter
  	fi
